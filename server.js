@@ -9,6 +9,7 @@ dotenv.config({ path: './config/.env' });
 
 // Import routes
 const usersRoutes = require('./routes/users.routes');
+const postsRoutes = require('./routes/posts.routes');
 
 // Database connection (assuming it's in `db.config.js`)
 const { db } = require('./config/db.config');
@@ -39,6 +40,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Use the users routes
 app.use('/users', usersRoutes);
+app.use('/posts', postsRoutes);
 
 // Start the server
 app.listen(3000, () => {
