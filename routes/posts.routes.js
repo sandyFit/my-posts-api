@@ -119,7 +119,7 @@ router.post('/add-post-comment', postsController.addPostComment);
  *       - posts
  *     parameters:
  *       - in: query
- *         name: postId
+ *         name: post_id
  *         type: integer
  *         description: Post id
  *         required: true
@@ -133,6 +133,96 @@ router.post('/add-post-comment', postsController.addPostComment);
  */
 
 router.get('/get-comments-from-post', postsController.getCommentsFromPost);
+
+/**
+ /**
+ * @swagger
+ * /posts/like-post:
+ *   put:
+ *     summary: Like a post
+ *     description: Increment the like count of a specific post by its ID.
+ *     tags:
+ *       - posts
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - post_id
+ *             properties:
+ *               post_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Post successfully liked
+ *       400:
+ *         description: Invalid post ID or bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+
+router.put('/like-post', postsController.likePost);
+
+
+/**
+ /**
+ * @swagger
+ * /posts/dislike-post:
+ *   put:
+ *     summary: dislike a post
+ *     description: Increment the dislike count of a specific post by its ID.
+ *     tags:
+ *       - posts
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - post_id
+ *             properties:
+ *               post_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Post successfully unliked
+ *       400:
+ *         description: Invalid post ID or bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+
+router.put('/dislike-post', postsController.dislikePost);
+
+/**
+ * @swagger
+ * /posts/delete-post:
+ *   delete:
+ *     summary: Delete a post.
+ *     description: Delete a post from a given ID.
+ *     tags:
+ *       - posts
+ *     parameters:
+ *       - in: query
+ *         name: post_id
+ *         type: integer
+ *         description: Post id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Post was successfully deleted
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal Server Error. Something went wrong on the server side.
+ */
+
+router.delete('/delete-post', postsController.deletePost);
 
 
 module.exports = router;

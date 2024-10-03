@@ -73,3 +73,65 @@ exports.getCommentsFromPost = (data, callback) => {
         }
     );
 };
+
+exports.likePost = (data, callback) => {
+    db.query(
+        `UPDATE posts
+        SET likesCount = likesCount + 1
+        WHERE id = ?`,
+        [data.post_id],
+        (err, results, fields) => {
+            if (err) {
+                return callback(err); // If there's an error during query execution, return the error
+            }
+            
+            // Check if one row was successfully updated in the database
+            // AffectedRows is a MySQL property that indicates how many rows were affected by an SQL query
+            if (results.affectedRows === 1) {
+                return callback(null, 'Like successful'); // If one row was updated, the like was successful
+            } else {
+                return callback(new Error('Invalid post')); // If no rows were updated, the post_id might not exist
+            }
+        }
+    )
+}
+exports.dislikePost = (data, callback) => {
+    db.query(
+        `UPDATE posts
+        SET dislikesCount = dislikesCount + 1
+        WHERE id = ?`,
+        [data.post_id],
+        (err, results, fields) => {
+            if (err) {
+                return callback(err); // If there's an error during query execution, return the error
+            }
+            
+            // Check if one row was successfully updated in the database
+            // AffectedRows is a MySQL property that indicates how many rows were affected by an SQL query
+            if (results.affectedRows === 1) {
+                return callback(null, 'Dislike successful'); // If one row was updated, the like was successful
+            } else {
+                return callback(new Error('Invalid post')); // If no rows were updated, the post_id might not exist
+            }
+        }
+    )
+}
+
+exports.deletePost = (data, callback) => {
+    db.query(
+        `DELETE FROM posts
+        WHERE id = ?`,
+        [data.post_id],
+        (err, results, fields) => {
+            if (err) {
+                return callback(err); // If there's an error during query execution, return the error
+            }
+
+            if (results.affectedRows === 1) {
+                return callback(null, 'Post successfully deleted'); // If one row was updated, the like was successful
+            } else {
+                return callback(new Error('Invalid post')); // If no rows were updated, the post_id might not exist
+            }
+        }
+    )
+}

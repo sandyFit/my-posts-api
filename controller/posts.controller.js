@@ -54,6 +54,13 @@ exports.addPostComment = (req, res, next) => {
 
     const { comment, post_id, addedByUserId } = req.body;
 
+    if (!comment || !post_id || !addedByUserId) {
+        return res.status(400).send({
+            success: 0,
+            message: "All fields are required."
+        });
+    }
+
     const data = {
         comment, 
         datetimeCreated: new Date(),
@@ -79,23 +86,98 @@ exports.addPostComment = (req, res, next) => {
 
 exports.getCommentsFromPost = (req, res, next) => {
     const data = {
-        post_id: req.query.post_id // Ensure this matches the key in postsService
+        /* Ensure post_id matches the database column name, the query parameter, and the data passed */
+        post_id: req.query.post_id // Expect post_id from query parameters
     };
     
     postsService.getCommentsFromPost(data, (err, results) => {
         if (err) {
-            console.log(err);
-            return res.status(400).send({
+            console.error(err);
+            return res.status(500).send({
                 success: 0,
-                data: 'Bad request'
+                message: 'Internal server error'
             });
         }
+
+        // Check if the results are empty, meaning no comments found for the given post_id
+        if (results.length === 0) {
+            return res.status(404).send({
+                success: 0,
+                message: `Post with ID ${data.post_id} not found`
+            });
+        }
+
         return res.status(200).send({
             success: 1,
             data: results,
         });
     });
 };
+
+
+
+exports.likePost = (req, res, next) => {
+    const data = {
+        post_id: req.body.post_id 
+    };
+    
+    postsService.likePost(data, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(400).send({
+                success: 0,
+                message: 'Bad request'
+            });
+        }
+
+        return res.status(200).send({
+            success: 1,
+            data: results,
+        });
+    });
+};
+
+exports.dislikePost = (req, res, next) => {
+    const data = {
+        post_id: req.body.post_id 
+    };
+    
+    postsService.dislikePost(data, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(400).send({
+                success: 0,
+                message: 'Bad request'
+            });
+        }
+
+        return res.status(200).send({
+            success: 1,
+            data: results,
+        });
+    });
+};
+
+exports.deletePost = (req, res, next) => {
+    const data = {
+        post_id: req.query.post_id 
+    };
+    
+    postsService.deletePost(data, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(400).send({
+                success: 0,
+                message: 'Bad request'
+            });
+        }
+
+        return res.status(200).send({
+            success: 1,
+            data: results,
+        });
+    });
+}
 
 
 
