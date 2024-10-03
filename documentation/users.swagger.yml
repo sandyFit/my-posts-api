@@ -1,0 +1,76 @@
+paths:
+  /users/register:
+    post:
+      summary: Register a new user
+      description: Registers a new user by providing personal details such as first name, last name, email, and password.
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - email
+                - password
+              properties:
+                firstName:
+                  type: string
+                  description: User's first name
+                  minLength: 3
+                  maxLength: 45
+                  example: John
+                lastName:
+                  type: string
+                  description: User's last name
+                  minLength: 3
+                  maxLength: 45
+                  example: Doe
+                email:
+                  type: string
+                  description: User's email address
+                  format: email
+                  minLength: 3
+                  maxLength: 45
+                  example: john@doe.com
+                password:
+                  type: string
+                  description: Password for the user account
+                  format: password
+                  minLength: 6
+                  maxLength: 20
+                  example: aBd-5%_A
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Registration successful"
+        "400":
+          description: Bad Request - Invalid input or missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid request payload or validation failed"
+        "500":
+          description: Internal Server Error - Server encountered an unexpected condition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal Server Error"
